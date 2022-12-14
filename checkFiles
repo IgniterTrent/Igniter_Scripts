@@ -1,0 +1,75 @@
+#!/bin/bash
+
+scriptPath="$1"
+
+if [[ -d "./02_Title" ]]; then
+    cd "./02_Title"
+    for i in *; do
+        if [[ -d "./$i" ]]; then
+            cd "./$i"
+            if [[ -d "./_Images" ]]; then
+                cd "./_Images"
+                bash ${scriptPath}checkImages
+                cd ..
+            fi
+            if [[ -d "./_Motions" ]]; then
+                cd "./_Motions"
+                bash ${scriptPath}checkMotions
+                cd ..
+            fi
+            bash ${scriptPath}checkAE
+            cd ..
+        fi
+    done
+    cd ..
+fi
+
+if [[ -d "./03_Social" ]]; then
+    cd "./03_Social"
+    for i in *; do
+        cd "./$i"
+        if [[ -d "./_Images" ]]; then
+            cd "./_Images"
+            bash ${scriptPath}checkImages
+            cd ..
+        fi
+        if [[ -d "./_Motions" ]]; then
+            cd "./_Motions"
+            bash ${scriptPath}checkMotions
+            cd ..
+        fi
+        bash ${scriptPath}checkAE
+        cd ..
+    done
+    cd ..
+fi
+
+if [[ -d "./04_Worship Background/_Motions" ]]; then
+    cd "./04_Worship Background/_Motions"
+    bash ${scriptPath}checkMotions
+    cd ../../
+fi
+
+if [[ -d "./05_Ultra Wide/_Motions" ]]; then
+    cd "./05_Ultra Wide/_Motions"
+    bash ${scriptPath}checkMotions
+    cd ../../
+fi
+
+if [[ -d "./06_Countdown/_Motions" ]]; then
+    cd "./06_Countdown/_Motions"
+    bash ${scriptPath}checkMotions
+    cd ../../
+fi
+
+if [[ -d "./07_Trivia/_Motions" ]]; then
+    cd "./07_Trivia/_Motions"
+    bash ${scriptPath}checkMotions
+    cd ../../
+fi
+
+if [[ -d "./08_Bumper/_Motions" ]]; then
+    cd "./08_Bumper/_Motions"
+    bash ${scriptPath}checkMotions
+    cd ../../
+fi

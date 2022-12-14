@@ -1,0 +1,69 @@
+#!/bin/bash
+
+suffixWIDE="_WIDE"
+suffixSTD="_STD"
+suffixLS="_LS"
+suffixPR="_PR"
+suffixSQ="_SQ"
+suffixBL="_BL"
+suffixOR="_OR"
+suffixTH="_TH"
+suffixTP="_TP"
+suffixCH="_CH"
+suffixFS="_FS_"
+suffixFR="_FR_"
+suffixPV="_PV_"
+suffix=($suffixWIDE $suffixSTD $suffixLS $suffixPR $suffixSQ $suffixBL $suffixOR $suffixTH $suffixTP $suffixCH $suffixFS $suffixFR $suffixPV)
+
+prefixTT1="TT1_"
+prefixTT2="TT2_"
+prefixTT3="TT3_"
+prefixAlt1="Alt1_"
+prefixAlt2="Alt2_"
+prefixAlt3="Alt3_"
+prefixL3="L3_"
+prefixPP="PP_"
+prefixFS="FS_"
+prefixFR="FR_"
+prefixPV="PV_"
+prefix=($prefixTT1 $prefixTT2 $prefixTT3 $prefixAlt1 $prefixAlt2 $prefixAlt3 $prefixL3 $prefixPP $prefixFS $prefixFR $prefixPV)
+
+resWIDE="1920x1080"
+resSTD="1440x1080"
+resLS="1280x720"
+resPR="1080x1920"
+resSQ="1080x1080"
+resOR="672x670"
+
+
+for i in *.jpg *.png; do
+    if [[ "$i" == "*.jpg" ]] || [[ "$i" == "*.png" ]]; then
+        noImages="TRUE"
+    else
+        fileRes=$(ffprobe -v quiet -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 "$i")
+        checkSuffix="Fail"
+        checkPrefix="Fail"
+        for t in ${suffix[@]}; do 
+            if [[ "$i" == *"$t"* ]]; then
+                checkSuffix="Success"
+            fi
+        done
+        for t in ${prefix[@]}; do 
+            if [[ "$i" == *"$t"* ]]; then
+                checkPrefix="Success"
+            fi
+        done
+        if [[ $checkSuffix == "Fail" ]]; then 
+            echo "  Incorrect Suffix for $i" 
+        fi
+        if [[ $checkPrefix == "Fail" ]]; then 
+            echo "  Incorrect Prefix for $i" 
+        fi
+        if ([[ "$i" == *"$suffixWIDE"* ]] && [[ $fileRes == $resWIDE ]]) || ([[ "$i" == *"$suffixSTD"* ]] && [[ $fileRes == $resSTD ]]) || ([[ "$i" == *"$suffixLS"* ]] && [[ $fileRes == $resLS ]]) || ([[ "$i" == *"$suffixPR"* ]] && [[ $fileRes == $resPR ]]) || ([[ "$i" == *"$suffixSQ"* ]] && [[ $fileRes == $resSQ ]]) || ([[ "$i" == *"$suffixOR"* ]] && [[ $fileRes == $resOR ]]) || ([[ "$i" == *"$suffixTH"* ]] && [[ "$i" == *"$prefixL3"* ]] && [[ $fileRes == $resLS ]]); then
+            check="Success"
+        else
+            echo "  Incorrect Resolution for: $i"
+            echo "    Resolution Found: $fileRes"
+        fi
+    fi
+done

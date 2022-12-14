@@ -1,0 +1,191 @@
+#!/bin/bash
+
+# sorting identifiers
+    suffixWIDE="_WIDE"
+    suffixSTD="_STD"
+    suffixHD="_HD"
+    suffixSD="_SD"
+    suffixLS="_LS"
+    suffixPR="_PR"
+    suffixSQ="_SQ"
+    suffixBL="_BL"
+    suffixOR="_OR"
+    suffixTH="_TH"
+    suffixAE="_AE"
+    suffixTP="_TP"
+    suffixCH="_CH"
+    suffixFS="_FS_"
+    suffixFR="_FR_"
+    suffixPV="_PV_"
+
+    prefixTT1="TT1_"
+    prefixTT2="TT2_"
+    prefixTT3="TT3_"
+    prefixAlt1="Alt1_"
+    prefixAlt2="Alt2_"
+    prefixAlt3="Alt3_"
+    prefixL3="L3_"
+    prefixPP=".pptx"
+    prefixFS="FS_"
+    prefixFR="FR_"
+    prefixPV="PV_"
+    prefixWB="WB_"
+    prefixUW="UW_"
+    prefixCD="Countdown_"
+    prefixTV="Trivia_"
+    prefixBP="Bumper_"
+#
+
+#preset tags
+    presetTT1="#preset=tg_title1"
+    presetTT2="#preset=tg_title2"
+    presetTT3="#preset=tg_title3"
+
+    presetAlt1="#preset=tg_alt1"
+    presetAlt2="#preset=tg_alt2"
+    presetAlt3="#preset=tg_alt3"
+
+    presetL3WIDE="#preset=tg_transparent_png_download_wide"
+    presetL3STD="#preset=tg_transparent_png_download_standard"
+    presetL3TH="#preset=tg_transparent_png_preview"
+
+    presetPPWIDE="#preset=ppt_wide"
+    presetPPSTD="#preset=ppt_standard"
+
+    presetSOR="#preset=social_orientations"
+    presetSLS1="#preset=social_landscape1"
+    presetSLS2="#preset=social_landscape2"
+    presetSPR1="#preset=social_portrait1"
+    presetSPR2="#preset=social_portrait2"
+    presetSSQ1="#preset=social_square1"
+    presetSSQ2="#preset=social_square2"
+    presetSFRLS="#preset=download_only#display_resolution=Landscape"
+    presetSFRPR="#preset=download_only#display_resolution=Portrait"
+    presetSFRSQ="#preset=download_only#display_resolution=Square"
+    presetSFRTP="#preset=preview_only#preset=social_square1"
+
+    presetSMLS="#display_resolution=Landscape"
+    presetSMPR="#display_resolution=Portrait"
+    presetSMFRLS="#original_content_type=not_transformable#output=download#display_resolution=Transparent#name=Landscape"
+    presetSMFRPR="#original_content_type=not_transformable#output=download#display_resolution=Transparent#name=Portrait"
+    presetSMFRSQ="#original_content_type=not_transformable#output=download#display_resolution=Transparent#name=Square"
+    presetSMFRCH="#original_content_type=not_transformable#output=preview"
+
+    presetAE="#preset=aep_zip"
+#
+
+for i in *.jpg *.png *.pptx; do
+    if [[ "$i" != "*.jpg" ]] && [[ "$i" != "*.png" ]] && [[ "$i" != "*.pptx" ]]; then
+        if [[ "$i" == *"#preset="* ]]; then
+            named="TRUE"
+        else
+            # determine filetype
+            if [[ "$i" == *".jpg"* ]]; then
+                fileType=".jpg"
+            elif [[ "$i" == *".png"* ]]; then
+                fileType=".png"
+            elif [[ "$i" == *".pptx"* ]]; then
+                fileType=".pptx"
+            fi
+
+            # image titles
+            if [[ "$i" == *"$prefixTT1"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetTT1}$fileType"
+            elif [[ "$i" == *"$prefixTT2"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetTT2}$fileType"
+            elif [[ "$i" == *"$prefixTT3"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetTT3}$fileType"
+
+            # image alts
+            elif [[ "$i" == *"$prefixAlt1"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetAlt1}$fileType"
+            elif [[ "$i" == *"$prefixAlt2"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetAlt2}$fileType"
+            elif [[ "$i" == *"$prefixAlt3"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetAlt3}$fileType"
+
+            # image lower thirds
+            elif [[ "$i" == *"$suffixTH"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetL3TH}$fileType"
+            elif [[ "$i" == *"$prefixL3"* ]] && [[ "$i" == *"$suffixWIDE"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetL3WIDE}$fileType"
+            elif [[ "$i" == *"$prefixL3"* ]] && [[ "$i" == *"$suffixSTD"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetL3STD}$fileType"
+
+            # powerpoints
+            elif [[ "$i" == *"$prefixPP"* ]] && [[ "$i" == *"$suffixWIDE"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetPPWIDE}$fileType"
+            elif [[ "$i" == *"$prefixPP"* ]] && [[ "$i" == *"$suffixSTD"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetPPSTD}$fileType"
+            
+            # image socials
+            elif [[ "$i" == *"$suffixOR"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetSOR}$fileType"
+            elif [[ "$i" == *"$suffixFS"* ]] || [[ "$i" == *"$suffixPV"* ]]; then
+                if [[ "$i" == *"$suffixLS"* ]] && [[ "$i" != *"$suffixBL"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSLS1}$fileType"
+                elif [[ "$i" == *"$suffixPR"* ]] && [[ "$i" != *"$suffixBL"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSPR1}$fileType"
+                elif [[ "$i" == *"$suffixSQ"* ]] && [[ "$i" != *"$suffixBL"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSSQ1}$fileType"
+                elif [[ "$i" == *"$suffixLS"* ]] && [[ "$i" == *"$suffixBL"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSLS2}$fileType"
+                elif [[ "$i" == *"$suffixPR"* ]] && [[ "$i" == *"$suffixBL"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSPR2}$fileType"
+                elif [[ "$i" == *"$suffixSQ"* ]] && [[ "$i" == *"$suffixBL"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSSQ2}$fileType"
+                fi
+            elif [[ "$i" == *"$suffixFR"* ]]; then
+                if [[ "$i" == *"$suffixLS"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSFRLS}$fileType"
+                elif [[ "$i" == *"$suffixPR"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSFRPR}$fileType"
+                elif [[ "$i" == *"$suffixSQ"* ]] && [[ "$i" != *"$suffixTP"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSFRSQ}$fileType"
+                elif [[ "$i" == *"$suffixSQ"* ]] && [[ "$i" == *"$suffixTP"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSFRTP}$fileType"
+                fi            
+            fi
+        fi
+    fi
+done
+
+for i in *.mov *.mp4 *.zip; do
+    if [[ "$i" != "*.zip" ]] && [[ "$i" != "*.mov" ]] && [[ "$i" != "*.mp4" ]]; then
+        if [[ "$i" == *"#preset="* ]] || [[ "$i" == *"#original_content_type="* ]]; then
+            named="TRUE"
+        else
+            # determine filetype
+            if [[ "$i" == *".mov"* ]]; then
+                fileType=".mov"
+            elif [[ "$i" == *".mp4"* ]]; then
+                fileType=".mp4"
+            elif [[ "$i" == *".zip"* ]]; then
+                fileType=".zip"
+            fi
+
+            # ae project
+            if [[ "$i" == *".zip"* ]]; then
+                mv "$i" "${i%"$fileType"}${presetAE}$fileType"
+
+            # motion socials
+            elif [[ "$i" == *"$suffixFS"* ]] || [[ "$i" == *"$suffixPV"* ]]; then
+                if [[ "$i" == *"$suffixLS"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSMLS}$fileType"
+                elif [[ "$i" == *"$suffixPR"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSMPR}$fileType"
+                fi
+            elif [[ "$i" == *"$suffixFR"* ]]; then
+                if [[ "$i" == *"$suffixLS"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSMFRLS}$fileType"
+                elif [[ "$i" == *"$suffixPR"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSMFRPR}$fileType"
+                elif [[ "$i" == *"$suffixSQ"* ]] && [[ "$i" != *"$suffixCH"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSMFRSQ}$fileType"
+                elif [[ "$i" == *"$suffixSQ"* ]] && [[ "$i" == *"$suffixCH"* ]]; then
+                    mv "$i" "${i%"$fileType"}${presetSMFRCH}$fileType"
+                fi
+            fi
+        fi
+    fi
+done

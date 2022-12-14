@@ -1,0 +1,124 @@
+#!/bin/bash
+
+OS=$(uname)
+
+if [[ $OS == "Darwin" ]]; then
+    workingPath="/Volumes/Storage Consolidation/Design Primary/_PRODUCTS/_Working/"
+elif [[ $OS == "Linux" ]]; then
+    workingPath="/mnt/q/Design Primary/_PRODUCTS/_Working/"
+else
+    echo "Not able to detect Operating System"
+    exit
+fi
+
+if [[ ! -d "${workingPath}" ]]; then
+    echo "Server not connected"
+    exit
+fi
+
+# user inputs
+read -p "What is the name of this Project?                                                        " pName
+read -p "Are there Titles?                                                                        " ttBoo
+if [[ "$ttBoo" == *"y"* ]]; then
+read -p "What are the look variations for this project? (separated by comma, leave blank if none) " looksTemp
+read -p "What are the main title names? (separated by comma, match order of looks)                " titleTemp
+read -p "Do you want to include Welcome, Goodbye, Events, and Offering for each in this project?  " titleExtras
+fi
+read -p "Are there socials?                                                                       " socBoo
+if [[ "$socBoo" == *"y"* ]]; then
+read -p "What are the type of social? (separated by comma)                                        " socialTemp
+fi
+read -p "Are there Worship Backgrounds?                                                           " wbBoo
+read -p "Are there Ultra Wides?                                                                   " uwBoo
+read -p "Are there Countdowns?                                                                    " cdBoo
+read -p "Are there Trivias?                                                                       " tvBoo
+read -p "Is there a Bumper?                                                                       " bpBoo
+
+IFS=',' read -ra looksArray <<< "$looksTemp"
+IFS=',' read -ra titleTypes <<< "$titleTemp"
+IFS=',' read -ra socialTypes <<< "$socialTemp"
+
+makeFolders () {
+    mkdir -p "01_Marketing"
+    mkdir -p "01_Marketing/_Images"
+
+    if [[ "$ttBoo" == *"y"* ]]; then
+        mkdir -p "02_Title"
+        mkdir -p "02_Title/$1"
+        mkdir -p "02_Title/$1/_Images"
+        mkdir -p "02_Title/$1/_Motions"
+        mkdir -p "02_Title/$1/_PowerPoints"
+        if [[ "$titleExtras" == *"y"* ]]; then
+            mkdir -p "02_Title/Goodbye"
+            mkdir -p "02_Title/Goodbye/_Images"
+            mkdir -p "02_Title/Goodbye/_Motions"
+            mkdir -p "02_Title/Goodbye/_PowerPoints"
+            mkdir -p "02_Title/Events"
+            mkdir -p "02_Title/Events/_Images"
+            mkdir -p "02_Title/Events/_Motions"
+            mkdir -p "02_Title/Events/_PowerPoints"
+            mkdir -p "02_Title/Offering"
+            mkdir -p "02_Title/Offering/_Images"
+            mkdir -p "02_Title/Offering/_Motions"
+            mkdir -p "02_Title/Offering/_PowerPoints"
+            mkdir -p "02_Title/Welcome"
+            mkdir -p "02_Title/Welcome/_Images"
+            mkdir -p "02_Title/Welcome/_Motions"
+            mkdir -p "02_Title/Welcome/_PowerPoints"
+        fi
+    fi
+
+    if [[ "$socBoo" == *"y"* ]]; then
+        mkdir -p "03_Social"
+        cd "./03_Social"
+        for i in ${socialTypes[@]}; do 
+            mkdir -p "$i"
+            mkdir -p "$i/_Images"
+            mkdir -p "$i/_Motions"
+        done
+        cd ..
+    fi
+
+    if [[ "$wbBoo" == *"y"* ]]; then
+        mkdir -p "04_Worship Background"
+        mkdir -p "04_Worship Background/_Motions"
+    fi
+
+    if [[ "$uwBoo" == *"y"* ]]; then
+        mkdir -p "05_Ultra Wide"
+        mkdir -p "05_Ultra Wide/_Motions"
+    fi
+
+    if [[ "$cdBoo" == *"y"* ]]; then
+        mkdir -p "06_Countdown"
+        mkdir -p "06_Countdown/_Motions"
+    fi
+
+    if [[ "$tvBoo" == *"y"* ]]; then
+        mkdir -p "07_Trivia"
+        mkdir -p "07_Trivia/_Motions"
+    fi
+
+    if [[ "$bpBoo" == *"y"* ]]; then
+        mkdir -p "08_Bumper"
+        mkdir -p "08_Bumper/_Images"
+    fi
+}
+
+cd "$workingPath"
+mkdir -p "${pName}_MASTER"
+cd "./${pName}_MASTER"
+
+if (( ${#looksArray[@]} > 1 )); then
+    for i in ${!looksArray[@]}; do
+        mkdir -p "${looksArray[$i]}"
+        cd "./${looksArray[$i]}"
+        makeFolders "${titleTypes[$i]}"
+        cd ..
+    done
+else
+    makeFolders "$titleTemp"
+fi
+
+mkdir -p "00_Assets"
+mkdir -p "00_Project Cache"

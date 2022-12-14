@@ -1,0 +1,14 @@
+#!/bin/bash
+
+filePrefix="$1"
+
+for i in *.psd *.zip *.jpg *.png *.mov *.mp4 *.pptx; do
+    if [[ "$i" != "*.psd" ]] && [[ "$i" != "*.zip" ]] && [[ "$i" != "*.jpg" ]] && [[ "$i" != "*.png" ]] && [[ "$i" != "*.mov" ]] && [[ "$i" != "*.mp4" ]] && [[ "$i" != "*.pptx" ]]; then
+        if [[ "$i" == *"$filePrefix"* ]]; then
+            named="TRUE"
+        else
+            newName="${filePrefix}_$i"
+            mv "$i" "$newName"
+        fi
+    fi
+done
